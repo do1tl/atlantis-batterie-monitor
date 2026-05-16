@@ -1,6 +1,6 @@
 /**
  * Atlantis Batterie Monitor
- * Energiefluss: Solar → Batterie 1 + Batterie 2 (untereinander) → Batterie 3 → Shelly
+ * Energiefluss: Solar → Batterie 1 + Batterie 2 (untereinander) → Batterie 3 → Hoymiles → Shelly
  * https://github.com/do1tl/atlantis-batterie-monitor
  */
 
@@ -24,6 +24,8 @@ const FIELDS = [
   { key: 'battery3_power',     label: '🔋  Batterie 3 – Leistung (W)',     type: 'entity' },
   { key: 'battery3_remaining', label: '🔋  Batterie 3 – Restenergie',      type: 'entity' },
   { key: 'battery3_capacity',  label: '🔋  Batterie 3 – Kapazität (kWh)',  type: 'number' },
+
+  { key: 'hoymiles_power',     label: '⚡  Hoymiles – Leistung (W)',       type: 'entity' },
 
   { key: 'shelly_power',       label: '🏠  Shelly – Leistung (W)',         type: 'entity' },
 ];
@@ -70,8 +72,10 @@ class AtlantisEnergyCardEditor extends HTMLElement {
       FIELDS.slice(6, 10).map(f => this._fieldHtml(f)).join('') +
       sep('🔋 Batterie 3') +
       FIELDS.slice(10, 14).map(f => this._fieldHtml(f)).join('') +
+      sep('⚡ Hoymiles') +
+      this._fieldHtml(FIELDS[14]) +
       sep('🏠 Shelly') +
-      this._fieldHtml(FIELDS[14]);
+      this._fieldHtml(FIELDS[15]);
 
     this._updateValues();
     this._attachListeners();
@@ -146,6 +150,7 @@ class AtlantisEnergyCard extends HTMLElement {
       battery1_soc:        '', battery1_power: '', battery1_remaining: '', battery1_capacity: 5,
       battery2_soc:        '', battery2_power: '', battery2_remaining: '', battery2_capacity: 5,
       battery3_soc:        '', battery3_power: '', battery3_remaining: '', battery3_capacity: 5,
+      hoymiles_power:      '',
       shelly_power:        '',
     };
   }
@@ -242,8 +247,9 @@ class AtlantisEnergyCard extends HTMLElement {
     const b1W     = this._val('battery1_power');
     const b2W     = this._val('battery2_power');
     const b3W     = this._val('battery3_power');
-    const b3Soc   = this._val('battery3_soc');
-    const shellyW = this._val('shelly_power');
+    const b3Soc     = this._val('battery3_soc');
+    const hoymilesW = this._val('hoymiles_power');
+    const shellyW   = this._val('shelly_power');
 
     const arrowActive = (w) =>
       w !== null && w >  10 ? 'active'   :
@@ -413,6 +419,21 @@ class AtlantisEnergyCard extends HTMLElement {
             <div class="arrow ${arrowActive(b3W)}">›</div>
           </div>
 
+          <!-- ⚡ Hoymiles -->
+          <div class="node side-node">
+            <div class="side-icon">⚡</div>
+            <div class="side-name">Hoymiles</div>
+            <div class="node-val" style="color:${hoymilesW > 0 ? '#ffab00' : 'var(--secondary-text-color)'}">
+              ${this._fmt(hoymilesW, 'W')}
+            </div>
+          </div>
+
+          <!-- › -->
+          <div class="arrow-wrap">
+            <div class="arrow ${arrowActive(hoymilesW)}">›</div>
+            <div class="arrow ${arrowActive(hoymilesW)}">›</div>
+          </div>
+
           <!-- 🏠 Shelly -->
           <div class="node side-node">
             <div class="side-icon">🏠</div>
@@ -438,13 +459,13 @@ window.customCards = window.customCards || [];
 window.customCards.push({
   type:        'atlantis-energy-card',
   name:        'Atlantis Batterie Monitor',
-  description: 'Energiefluss Solar → Batterie 1 + Batterie 2 → Batterie 3 → Shelly',
+  description: 'Energiefluss Solar → Batterie 1 + Batterie 2 → Batterie 3 → Hoymiles → Shelly',
   preview:     false,
   documentationURL: 'https://github.com/do1tl/atlantis-batterie-monitor',
 });
 
 console.info(
-  '%c ATLANTIS-BATTERIE-MONITOR %c v1.1.0 ',
+  '%c ATLANTIS-BATTERIE-MONITOR %c v1.2.0',
   'background:#1976d2;color:#fff;font-weight:700;padding:2px 6px;border-radius:3px 0 0 3px',
-  'background:#333;color:#fff;padding:2px 6px;border-radius:0 3px 3px 0'
+  'background:#333;color:#fff;padding:2px 6px;border-radius:0 3px 3px 0',
 );
