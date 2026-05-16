@@ -155,8 +155,30 @@ class AtlantisEnergyCard extends HTMLElement {
     };
   }
 
-  setConfig(config) { this._config = config; this._render(); }
-  set hass(hass)    { this._hass   = hass;   this._render(); }
+  setConfig(config) { this._config = config; this._hass && this._render(); }
+
+  set hass(hass) {
+    if (!this._relevantChange(hass)) { this._hass = hass; return; }
+    this._hass = hass;
+    this._render();
+  }
+
+  _relevantChange(newHass) {
+    if (!this._hass || !this._config) return true;
+    const keys = [
+      'solar_power',
+      'battery1_soc','battery1_power','battery1_remaining',
+      'battery2_soc','battery2_power','battery2_remaining',
+      'battery3_soc','battery3_power','battery3_remaining',
+      'hoymiles_power',
+      'shelly_power',
+    ];
+    return keys.some(k => {
+      const eid = this._config[k];
+      if (!eid) return false;
+      return this._hass.states[eid]?.state !== newHass.states[eid]?.state;
+    });
+  }
 
   // ── Hilfsfunktionen ────────────────────────────────────────────────────────
 
@@ -477,7 +499,7 @@ window.customCards.push({
 });
 
 console.info(
-  '%c ATLANTIS-BATTERIE-MONITOR %c v1.3.0',
+  '%c ATLANTIS-BATTERIE-MONITOR %c v1.3.1',
   'background:#1976d2;color:#fff;font-weight:700;padding:2px 6px;border-radius:3px 0 0 3px',
   'background:#333;color:#fff;padding:2px 6px;border-radius:0 3px 3px 0',
 );
