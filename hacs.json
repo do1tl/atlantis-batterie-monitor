@@ -1,0 +1,7 @@
+{
+  "name": "Atlantis Energy Flow Card",
+  "description": "Energiefluss-Karte: Solar → Batterie 1+2 → Batterie 3 → Shelly mit SOC, Watt und Restenergie",
+  "render_readme": true,
+  "filename": "atlantis-energy-card.js",
+  "content_in_root": true
+}
