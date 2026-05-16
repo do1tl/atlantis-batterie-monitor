@@ -2,7 +2,7 @@
   "name": "Atlantis Batterie Monitor",
   "short_name": "Atlantis Batterie Monitor",
   "description": "Energiefluss-Karte: Solar → Batterie 1+2 → Batterie 3 → Shelly mit SOC, Watt und Restenergie",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "documentation": "https://github.com/do1tl/atlantis-batterie-monitor",
   "codeowners": ["@do1tl"],
   "filename": "atlantis-energy-card.js",
