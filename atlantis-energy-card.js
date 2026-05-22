@@ -7,27 +7,34 @@
 // ── Konfigurationsfelder ──────────────────────────────────────────────────────
 
 const FIELDS = [
-  { key: 'title',              label: 'Kartentitel',                      type: 'text'   },
-  { key: 'solar_power',        label: '☀️  Solar – Leistung (W)',          type: 'entity' },
+  { key: 'title',              label: 'Kartentitel',                           type: 'text'   },
+  { key: 'solar_power',        label: '☀️  Solar – Leistung (W)',               type: 'entity' },
 
-  { key: 'battery1_soc',       label: '🔋  Batterie 1 – SOC (%)',          type: 'entity' },
-  { key: 'battery1_power',     label: '🔋  Batterie 1 – Leistung (W)',     type: 'entity' },
-  { key: 'battery1_remaining', label: '🔋  Batterie 1 – Restenergie',      type: 'entity' },
-  { key: 'battery1_capacity',  label: '🔋  Batterie 1 – Kapazität (kWh)',  type: 'number' },
+  { key: 'battery1_soc',              label: '🔋  Batterie 1 – SOC (%)',               type: 'entity' },
+  { key: 'battery1_power',            label: '🔋  Batterie 1 – Leistung (W)',           type: 'entity' },
+  { key: 'battery1_remaining',        label: '🔋  Batterie 1 – Restenergie',            type: 'entity' },
+  { key: 'battery1_capacity',         label: '🔋  Batterie 1 – Kapazität (kWh)',        type: 'number' },
+  { key: 'battery1_energy_in_day',    label: '🔋  Batterie 1 – Tagesladung (kWh)',      type: 'entity' },
+  { key: 'battery1_energy_out_day',   label: '🔋  Batterie 1 – Tagesentladung (kWh)',   type: 'entity' },
 
-  { key: 'battery2_soc',       label: '🔋  Batterie 2 – SOC (%)',          type: 'entity' },
-  { key: 'battery2_power',     label: '🔋  Batterie 2 – Leistung (W)',     type: 'entity' },
-  { key: 'battery2_remaining', label: '🔋  Batterie 2 – Restenergie',      type: 'entity' },
-  { key: 'battery2_capacity',  label: '🔋  Batterie 2 – Kapazität (kWh)',  type: 'number' },
+  { key: 'battery2_soc',              label: '🔋  Batterie 2 – SOC (%)',               type: 'entity' },
+  { key: 'battery2_power',            label: '🔋  Batterie 2 – Leistung (W)',           type: 'entity' },
+  { key: 'battery2_remaining',        label: '🔋  Batterie 2 – Restenergie',            type: 'entity' },
+  { key: 'battery2_capacity',         label: '🔋  Batterie 2 – Kapazität (kWh)',        type: 'number' },
+  { key: 'battery2_energy_in_day',    label: '🔋  Batterie 2 – Tagesladung (kWh)',      type: 'entity' },
+  { key: 'battery2_energy_out_day',   label: '🔋  Batterie 2 – Tagesentladung (kWh)',   type: 'entity' },
 
-  { key: 'battery3_soc',       label: '🔋  Batterie 3 – SOC (%)',          type: 'entity' },
-  { key: 'battery3_power',     label: '🔋  Batterie 3 – Leistung (W)',     type: 'entity' },
-  { key: 'battery3_remaining', label: '🔋  Batterie 3 – Restenergie',      type: 'entity' },
-  { key: 'battery3_capacity',  label: '🔋  Batterie 3 – Kapazität (kWh)',  type: 'number' },
+  { key: 'battery3_soc',              label: '🔋  Batterie 3 – SOC (%)',               type: 'entity' },
+  { key: 'battery3_power',            label: '🔋  Batterie 3 – Leistung (W)',           type: 'entity' },
+  { key: 'battery3_remaining',        label: '🔋  Batterie 3 – Restenergie',            type: 'entity' },
+  { key: 'battery3_capacity',         label: '🔋  Batterie 3 – Kapazität (kWh)',        type: 'number' },
 
-  { key: 'hoymiles_power',     label: '⚡  Hoymiles – Leistung (W)',       type: 'entity' },
+  { key: 'hoymiles_dc_power',         label: '⚡  Hoymiles – DC Eingang (W)',           type: 'entity' },
+  { key: 'hoymiles_dc_energy_day',    label: '⚡  Hoymiles – DC Tagesenergie (kWh)',    type: 'entity' },
+  { key: 'hoymiles_power',            label: '⚡  Hoymiles – AC Ausgang (W)',           type: 'entity' },
+  { key: 'hoymiles_ac_energy_day',    label: '⚡  Hoymiles – AC Tagesenergie (kWh)',    type: 'entity' },
 
-  { key: 'shelly_power',       label: '🏠  Shelly – Leistung (W)',         type: 'entity' },
+  { key: 'shelly_power',              label: '🏠  Shelly – Leistung (W)',               type: 'entity' },
 ];
 
 // ── Editor ────────────────────────────────────────────────────────────────────
@@ -61,21 +68,22 @@ class AtlantisEnergyCardEditor extends HTMLElement {
                    margin:14px 0 6px;border-bottom:1px solid var(--divider-color);
                    padding-bottom:4px">${label}</div>`;
 
+    const f = FIELDS;
     this.innerHTML =
       sep('Allgemein') +
-      this._fieldHtml(FIELDS[0]) +
+      this._fieldHtml(f[0]) +
       sep('☀️ Solar') +
-      this._fieldHtml(FIELDS[1]) +
+      this._fieldHtml(f[1]) +
       sep('🔋 Batterie 1') +
-      FIELDS.slice(2, 6).map(f => this._fieldHtml(f)).join('') +
+      f.slice(2, 8).map(x => this._fieldHtml(x)).join('') +
       sep('🔋 Batterie 2') +
-      FIELDS.slice(6, 10).map(f => this._fieldHtml(f)).join('') +
+      f.slice(8, 14).map(x => this._fieldHtml(x)).join('') +
       sep('🔋 Batterie 3') +
-      FIELDS.slice(10, 14).map(f => this._fieldHtml(f)).join('') +
+      f.slice(14, 18).map(x => this._fieldHtml(x)).join('') +
       sep('⚡ Hoymiles') +
-      this._fieldHtml(FIELDS[14]) +
+      f.slice(18, 22).map(x => this._fieldHtml(x)).join('') +
       sep('🏠 Shelly') +
-      this._fieldHtml(FIELDS[15]);
+      this._fieldHtml(f[22]);
 
     this._updateValues();
     this._attachListeners();
@@ -145,13 +153,16 @@ class AtlantisEnergyCard extends HTMLElement {
 
   static getStubConfig() {
     return {
-      title:               'Energiefluss',
-      solar_power:         '',
-      battery1_soc:        '', battery1_power: '', battery1_remaining: '', battery1_capacity: 5,
-      battery2_soc:        '', battery2_power: '', battery2_remaining: '', battery2_capacity: 5,
-      battery3_soc:        '', battery3_power: '', battery3_remaining: '', battery3_capacity: 5,
-      hoymiles_power:      '',
-      shelly_power:        '',
+      title:                    'Energiefluss',
+      solar_power:              '',
+      battery1_soc:             '', battery1_power: '', battery1_remaining: '', battery1_capacity: 5,
+      battery1_energy_in_day:   '', battery1_energy_out_day: '',
+      battery2_soc:             '', battery2_power: '', battery2_remaining: '', battery2_capacity: 5,
+      battery2_energy_in_day:   '', battery2_energy_out_day: '',
+      battery3_soc:             '', battery3_power: '', battery3_remaining: '', battery3_capacity: 5,
+      hoymiles_dc_power:        '', hoymiles_dc_energy_day: '',
+      hoymiles_power:           '', hoymiles_ac_energy_day: '',
+      shelly_power:             '',
     };
   }
 
@@ -167,10 +178,11 @@ class AtlantisEnergyCard extends HTMLElement {
     if (!this._hass || !this._config) return true;
     const keys = [
       'solar_power',
-      'battery1_soc','battery1_power','battery1_remaining',
-      'battery2_soc','battery2_power','battery2_remaining',
+      'battery1_soc','battery1_power','battery1_remaining','battery1_energy_in_day','battery1_energy_out_day',
+      'battery2_soc','battery2_power','battery2_remaining','battery2_energy_in_day','battery2_energy_out_day',
       'battery3_soc','battery3_power','battery3_remaining',
-      'hoymiles_power',
+      'hoymiles_dc_power','hoymiles_dc_energy_day',
+      'hoymiles_power','hoymiles_ac_energy_day',
       'shelly_power',
     ];
     return keys.some(k => {
@@ -204,6 +216,13 @@ class AtlantisEnergyCard extends HTMLElement {
     return val.toFixed(1) + (u ? ' '+u : '');
   }
 
+  _fmtKwh(key) {
+    const val = this._val(key);
+    if (val === null) return null;
+    const u = this._unit(key);
+    return this._fmt(val, u || 'kWh');
+  }
+
   _socColor(v) {
     if (v === null) return '#555';
     if (v >= 75) return '#00c853';
@@ -235,7 +254,33 @@ class AtlantisEnergyCard extends HTMLElement {
     return this._fmt(rem, u) + pct;
   }
 
-  // ── Battery-Cell HTML (für Bat-Zeile nebeneinander) ───────────────────────
+  // ── Arrow-Row HTML ─────────────────────────────────────────────────────────
+
+  // Zwei Pfeile mit je eigenem Watt + kWh-Wert (Solar→Bat und Bat→Bat3)
+  _arrowRowDual(cls1, w1, kwh1, cls2, w2, kwh2) {
+    const col = (cls, w, kwh) => `
+      <div class="arrow-group">
+        <div class="arrow ${cls}">↓</div>
+        <div class="flow-val" style="color:${this._pwrColor(w)}">${this._pwrLabel(w)}</div>
+        ${kwh !== null ? `<div class="flow-kwh">${kwh} heute</div>` : ''}
+      </div>`;
+    return `<div class="arrow-row">${col(cls1,w1,kwh1)}${col(cls2,w2,kwh2)}</div>`;
+  }
+
+  // Zwei Pfeile mit zentriertem Watt + kWh (Bat3→Hoymiles, Hoymiles→Shelly)
+  _arrowRowSingle(cls, w, kwh) {
+    return `
+      <div class="arrow-row">
+        <div class="arrow ${cls}">↓</div>
+        <div class="arrow-center">
+          <div class="flow-val" style="color:${this._pwrColor(w)}">${this._pwrLabel(w)}</div>
+          ${kwh !== null ? `<div class="flow-kwh">${kwh} heute</div>` : ''}
+        </div>
+        <div class="arrow ${cls}">↓</div>
+      </div>`;
+  }
+
+  // ── Battery-Cell HTML ──────────────────────────────────────────────────────
 
   _batCell(label, socKey, pwrKey, remKey, capKey) {
     const soc = this._val(socKey);
@@ -268,16 +313,24 @@ class AtlantisEnergyCard extends HTMLElement {
   _render() {
     if (!this._config) return;
 
-    const title   = this._config.title || 'Energiefluss';
-    const solarW  = this._val('solar_power');
-    const b1W     = this._val('battery1_power');
-    const b2W     = this._val('battery2_power');
-    const b3W     = this._val('battery3_power');
-    const b3Soc     = this._val('battery3_soc');
-    const hoymilesW = this._val('hoymiles_power');
-    const shellyW   = this._val('shelly_power');
+    const title      = this._config.title || 'Energiefluss';
+    const solarW     = this._val('solar_power');
+    const b1W        = this._val('battery1_power');
+    const b2W        = this._val('battery2_power');
+    const b3W        = this._val('battery3_power');
+    const b3Soc      = this._val('battery3_soc');
+    const hoyDcW     = this._val('hoymiles_dc_power');
+    const hoyAcW     = this._val('hoymiles_power');
+    const shellyW    = this._val('shelly_power');
 
-    const arrowActive = (w) =>
+    const b1InKwh    = this._fmtKwh('battery1_energy_in_day');
+    const b1OutKwh   = this._fmtKwh('battery1_energy_out_day');
+    const b2InKwh    = this._fmtKwh('battery2_energy_in_day');
+    const b2OutKwh   = this._fmtKwh('battery2_energy_out_day');
+    const hoyDcKwh   = this._fmtKwh('hoymiles_dc_energy_day');
+    const hoyAcKwh   = this._fmtKwh('hoymiles_ac_energy_day');
+
+    const active = (w) =>
       w !== null && w >  10 ? 'active'   :
       w !== null && w < -10 ? 'discharge': '';
 
@@ -295,47 +348,30 @@ class AtlantisEnergyCard extends HTMLElement {
           margin-bottom: 12px;
         }
 
-        /* ── Vertikaler Fluss ── */
-        .flow {
-          display: flex;
-          flex-direction: column;
-          gap: 0;
-        }
+        .flow { display: flex; flex-direction: column; gap: 0; }
 
-        /* ── Node (volle Breite) ── */
+        /* ── Node ── */
         .node {
           background: var(--ha-card-background, var(--card-background-color));
           border: 1px solid var(--divider-color, rgba(128,128,128,0.2));
           border-radius: 12px;
           padding: 10px 14px;
         }
-
-        /* Einzel-Node: Icon + Name links, Werte rechts */
-        .single-node {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
+        .single-node { display: flex; align-items: center; gap: 10px; }
         .node-icon-big { font-size: 26px; line-height: 1; flex-shrink: 0; }
         .node-label {
           font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
           text-transform: uppercase; color: var(--secondary-text-color);
         }
         .node-vals {
-          margin-left: auto;
-          text-align: right;
-          display: flex;
-          flex-direction: column;
-          gap: 1px;
+          margin-left: auto; text-align: right;
+          display: flex; flex-direction: column; gap: 1px;
         }
         .node-val   { font-size: 14px; font-weight: 600; line-height: 1.5; }
         .node-small { font-size: 10px; color: var(--secondary-text-color); }
 
-        /* ── Bat-Zeile: Bat1 + Bat2 nebeneinander ── */
-        .bat-row {
-          display: flex;
-          gap: 8px;
-        }
+        /* ── Bat-Zeile ── */
+        .bat-row  { display: flex; gap: 8px; }
         .bat-cell {
           flex: 1;
           border: 1px solid var(--divider-color, rgba(128,128,128,0.2));
@@ -343,14 +379,9 @@ class AtlantisEnergyCard extends HTMLElement {
           padding: 10px 10px 8px;
           background: var(--ha-card-background, var(--card-background-color));
         }
-        .bat-header {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          margin-bottom: 4px;
-        }
-        .bat-icon  { font-size: 20px; line-height: 1; }
-        .bat-label {
+        .bat-header { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+        .bat-icon   { font-size: 20px; line-height: 1; }
+        .bat-label  {
           font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
           text-transform: uppercase; color: var(--secondary-text-color);
         }
@@ -365,13 +396,10 @@ class AtlantisEnergyCard extends HTMLElement {
         }
         .soc-fill { height: 100%; border-radius: 3px; transition: width .6s; }
 
-        /* ── Pfeil (vertikal) ── */
+        /* ── Pfeil-Zeile ── */
         .arrow-row {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 8px;
-          padding: 2px 0;
+          display: flex; justify-content: center; align-items: center;
+          gap: 12px; padding: 3px 0;
         }
         .arrow {
           font-size: 18px; color: var(--secondary-text-color);
@@ -379,9 +407,19 @@ class AtlantisEnergyCard extends HTMLElement {
         }
         .arrow.active    { color: #00c853; }
         .arrow.discharge { color: #ff6d00; }
-        @keyframes pulse {
-          0%,100% { opacity:.3; } 50% { opacity:.9; }
+        @keyframes pulse { 0%,100% { opacity:.3; } 50% { opacity:.9; } }
+
+        /* Pfeil-Gruppe (Pfeil + Labels darunter) */
+        .arrow-group {
+          display: flex; flex-direction: column; align-items: center; gap: 1px;
         }
+        /* Zentrierter Label-Block zwischen zwei Pfeilen */
+        .arrow-center {
+          display: flex; flex-direction: column; align-items: center; gap: 1px;
+        }
+
+        .flow-val  { font-size: 11px; font-weight: 700; line-height: 1.3; }
+        .flow-kwh  { font-size: 10px; color: var(--secondary-text-color); line-height: 1.2; }
 
         .updated {
           text-align: right; font-size: 10px;
@@ -405,11 +443,11 @@ class AtlantisEnergyCard extends HTMLElement {
             </div>
           </div>
 
-          <!-- ↓ -->
-          <div class="arrow-row">
-            <div class="arrow ${arrowActive(solarW)}">↓</div>
-            <div class="arrow ${arrowActive(solarW)}">↓</div>
-          </div>
+          <!-- ↓ Solar → Bat1 / Bat2 -->
+          ${this._arrowRowDual(
+            active(b1W), b1W, b1InKwh,
+            active(b2W), b2W, b2InKwh
+          )}
 
           <!-- 🔋 Bat 1 + 🔋 Bat 2 nebeneinander -->
           <div class="bat-row">
@@ -417,11 +455,11 @@ class AtlantisEnergyCard extends HTMLElement {
             ${this._batCell('Batterie 2','battery2_soc','battery2_power','battery2_remaining','battery2_capacity')}
           </div>
 
-          <!-- ↓ -->
-          <div class="arrow-row">
-            <div class="arrow ${arrowActive(b1W)}">↓</div>
-            <div class="arrow ${arrowActive(b2W)}">↓</div>
-          </div>
+          <!-- ↓ Bat1 / Bat2 → Bat3 -->
+          ${this._arrowRowDual(
+            active(b1W), b1W, b1OutKwh,
+            active(b2W), b2W, b2OutKwh
+          )}
 
           <!-- 🔋 Bat 3 -->
           <div class="node">
@@ -443,28 +481,23 @@ class AtlantisEnergyCard extends HTMLElement {
             </div>
           </div>
 
-          <!-- ↓ -->
-          <div class="arrow-row">
-            <div class="arrow ${arrowActive(b3W)}">↓</div>
-            <div class="arrow ${arrowActive(b3W)}">↓</div>
-          </div>
+          <!-- ↓ Bat3 → Hoymiles DC -->
+          ${this._arrowRowSingle(active(hoyDcW), hoyDcW, hoyDcKwh)}
 
           <!-- ⚡ Hoymiles -->
           <div class="node single-node">
             <div class="node-icon-big">⚡</div>
             <div class="node-label">Hoymiles</div>
             <div class="node-vals">
-              <div class="node-val" style="color:${hoymilesW > 0 ? '#ffab00' : 'inherit'}">
-                ${this._fmt(hoymilesW, 'W')}
+              <div class="node-val" style="color:${hoyAcW > 0 ? '#ffab00' : 'inherit'}">
+                ${this._fmt(hoyAcW, 'W')}
               </div>
+              <div class="node-small">DC: ${this._fmt(hoyDcW, 'W')}</div>
             </div>
           </div>
 
-          <!-- ↓ -->
-          <div class="arrow-row">
-            <div class="arrow ${arrowActive(hoymilesW)}">↓</div>
-            <div class="arrow ${arrowActive(hoymilesW)}">↓</div>
-          </div>
+          <!-- ↓ Hoymiles AC → Shelly -->
+          ${this._arrowRowSingle(active(hoyAcW), hoyAcW, hoyAcKwh)}
 
           <!-- 🏠 Shelly -->
           <div class="node single-node">
@@ -499,7 +532,7 @@ window.customCards.push({
 });
 
 console.info(
-  '%c ATLANTIS-BATTERIE-MONITOR %c v1.3.1',
+  '%c ATLANTIS-BATTERIE-MONITOR %c v1.4.0',
   'background:#1976d2;color:#fff;font-weight:700;padding:2px 6px;border-radius:3px 0 0 3px',
   'background:#333;color:#fff;padding:2px 6px;border-radius:0 3px 3px 0',
 );
